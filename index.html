@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-navbutton-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <title>Noir Elixir | Lo más top de Medallo</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@100;300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --negro-absoluto: #000000;
+            --oro-sutil: #c5a059;
+            --oro-brillo: #e8c985;
+            --blanco-puro: #ffffff;
+            --texto-secundario: #a0a0a0;
+            --transition-smooth: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        html, body {
+            background-color: var(--negro-absoluto);
+            color: var(--blanco-puro);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            height: auto;
+            min-height: 100%;
+            scrollbar-width: none;
+        }
+
+        body::-webkit-scrollbar { display: none; }
+
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
+            pointer-events: none; z-index: 10; opacity: 0.8;
+        }
+
+        /* NAVEGACIÓN DINÁMICA */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 40px 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; opacity: 0; transform: translateY(-20px);
+            transition: var(--transition-smooth), background 0.5s ease, padding 0.5s ease;
+        }
+        
+        nav.scrolled {
+            padding: 15px 8%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.1);
+        }
+
+        nav.visible { opacity: 1; transform: translateY(0); }
+
+        .nav-trust-badges { 
+            display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+            transition: var(--transition-smooth);
+            position: absolute; right: 8%;
+        }
+
+        nav.scrolled .nav-trust-badges {
+            position: relative; right: auto; left: 0;
+        }
+
+        .nav-trust-badges span { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--oro-sutil); }
+
+        .nav-cta-mini {
+            opacity: 0; transform: translateX(20px); pointer-events: none;
+            padding: 10px 20px; border: 1px solid var(--oro-sutil);
+            color: var(--blanco-puro); text-decoration: none; font-size: 0.65rem;
+            letter-spacing: 2px; text-transform: uppercase; transition: all 0.5s ease;
+            position: relative; overflow: hidden;
+        }
+        
+        nav.scrolled .nav-cta-mini {
+            opacity: 1; transform: translateX(0); pointer-events: auto;
+        }
+
+        .nav-cta-mini::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s; animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
+
+        /* PRELOADER */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--negro-absoluto);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 2000; transition: opacity 1.5s ease-in-out;
+        }
+        .loader-brand {
+            font-family: 'Playfair Display', serif; font-size: 2.2rem; letter-spacing: 18px;
+            color: var(--oro-sutil); margin-bottom: 10px; animation: brandReveal 3s forwards;
+        }
+        .loader-name {
+            font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 5px;
+            color: var(--blanco-puro); text-transform: uppercase; opacity: 0;
+            animation: nameReveal 3s forwards;
+        }
+
+        @keyframes brandReveal { 0% { opacity: 0; filter: blur(10px); } 50% { opacity: 1; filter: blur(0); } 100% { opacity: 0; } }
+        @keyframes nameReveal { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+
+        /* HERO */
+        .hero {
+            position: relative; height: 100dvh; width: 100%;
+            display: flex; align-items: center; justify-content: flex-start;
+            padding: 0 8%; overflow: hidden; z-index: 2;
+        }
+
+        .video-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: var(--negro-absoluto);
+        }
+        
+        .video-container::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 50%, var(--negro-absoluto) 98%);
+            z-index: 1;
+        }
+
+        video {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.45;
+            filter: contrast(110%) brightness(0.7);
+            object-position: center 15%; 
+        }
+
+        .hero-content { position: relative; z-index: 5; width: 100%; }
+        .hero-text-box {
+            opacity: 0; transform: translateX(-40px); transition: var(--transition-smooth);
+            max-width: 600px;
+        }
+        .hero-text-box.visible { opacity: 1; transform: translateX(0); }
+
+        .hero-text-box h1 {
+            font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 4.5rem);
+            line-height: 1.1; margin-bottom: 25px;
+        }
+        .hero-text-box p { font-size: 1.1rem; line-height: 1.8; color: var(--texto-secundario); margin-bottom: 45px; }
+
+        .cta-button {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 22px 45px; background: transparent;
+            border: 1px solid var(--oro-sutil); color: var(--blanco-puro);
+            text-decoration: none; font-size: 0.8rem; letter-spacing: 4px;
+            text-transform: uppercase; transition: 0.5s ease;
+        }
+        .cta-button:hover { background: var(--oro-sutil); color: black; }
+
+        .scroll-indicator {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; z-index: 10;
+            opacity: 0; transition: 2s ease;
+        }
+        .scroll-indicator.visible { opacity: 1; }
+        .splash-arrow { width: 30px; height: 50px; position: relative; }
+        .splash-arrow::before {
+            content: ''; position: absolute; width: 4px; height: 4px; 
+            background: var(--oro-sutil); border-radius: 50%;
+            left: 50%; transform: translateX(-50%);
+            animation: dropAnim 2s infinite;
+        }
+        .splash-arrow::after {
+            content: '↓'; font-size: 2rem; color: var(--oro-sutil);
+            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            filter: blur(1px); animation: liquidPulse 2s infinite;
+        }
+
+        @keyframes dropAnim { 0% { top: 0; opacity: 0; transform: translateX(-50%) scale(1); } 30% { opacity: 1; } 100% { top: 40px; opacity: 0; transform: translateX(-50%) scale(0.5); } }
+        @keyframes liquidPulse { 0%, 100% { transform: translateX(-50%) scaleY(1); opacity: 0.5; } 50% { transform: translateX(-50%) scaleY(1.3); opacity: 1; filter: blur(0px); } }
+
+        @media (max-width: 768px) {
+            nav { padding: 25px 6%; }
+            nav.scrolled { padding: 12px 6%; }
+            .hero { align-items: center; padding-bottom: 5dvh; text-align: center; justify-content: center; }
+            .hero-text-box { transform: translateY(-20px); }
+            video { object-position: center 10%; transform: scale(1.2); }
+            .hero-text-box h1 { font-size: 2.2rem; }
+            .hero-text-box p { font-size: 0.95rem; margin: 0 auto 30px auto; }
+        }
+
+        .spray-particle {
+            position: fixed; background: radial-gradient(circle, var(--oro-brillo), transparent);
+            border-radius: 50%; pointer-events: none; z-index: 3000; opacity: 0;
+            filter: blur(3px);
+        }
+        @keyframes aromaSplash { 0% { transform: translate(0, 0) scale(1.5); opacity: 0; } 10% { opacity: 0.7; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
+
+        /* Estilos base para el resto de secciones */
+        .content-spacer { height: 150vh; background: linear-gradient(180deg, var(--negro-absoluto) 0%, #080808 100%); }
+    </style>
+</head>
+<body>
+
+    <div class="noise-overlay"></div>
+
+    <nav id="navbar">
+        <div class="nav-trust-badges">
+            <span>Medellín</span>
+            <span style="color: var(--blanco-puro); font-weight: 700;">Pago Contra Entrega</span>
+        </div>
+        
+        <a href="https://wa.me/3218946959?text=Hola%20Samuel%20quiero%20hacer%20un%20pedido%20%F0%9F%AA%B4" class="nav-cta-mini">
+            COMPRAR AHORA
+        </a>
+    </nav>
+
+    <div id="preloader">
+        <div class="loader-brand">NOIR</div>
+        <div class="loader-name">Samuel Casilla</div>
+    </div>
+
+    <section class="hero">
+        <div class="video-container">
+            <video autoplay muted loop playsinline id="bg-video" loading="lazy">
+                <source src="Videos/Fondo-Noir.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div class="hero-content">
+    <div class="hero-text-box" id="heroText">
+        <h1>Poder en cada gota. <br> <span style="font-style: italic; color: var(--oro-sutil);">El nivel de Medallo.</span></h1>
+        <p>Además de oler chimba, se trata de que sepan quién llegó. Es una estela de otro planeta para los que no se conforman con cualquier fragancia común.</p>
+        <a href="https://wa.me/3218946959?text=Hola%20Samuel%20deseo%20aseoria%20paa%20comprar%20mi%20nueva%20franacia%20%F0%9F%AA%B4%E2%9C%A8" class="cta-button" id="ctaBtn">
+            Asesoría para los que saben
+        </a>
+    </div>
+</div>
+
+        <div class="scroll-indicator" id="scrollInd">
+            <span style="font-size: 0.6rem; letter-spacing: 3px; color: var(--oro-sutil); margin-bottom: 10px; text-transform: uppercase;">Descender</span>
+            <div class="splash-arrow"></div>
+        </div>
+    </section>
+
+    <section class="inmersion-noir" id="experiencia">
+    <div class="interactive-glow" id="mouseGlow"></div>
+
+    <style>
+        .inmersion-noir {
+            position: relative;
+            padding: 100px 8%;
+            background: #000;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .interactive-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(197, 160, 89, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            transition: transform 0.1s ease-out;
+            filter: blur(40px);
+        }
+
+        .container-v2 {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-meta {
+            text-align: left;
+            margin-bottom: 60px;
+        }
+
+        .header-meta h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--blanco-puro);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        /* --- EFECTO DE REVELADO NATURAL SIN CURSOR --- */
+        .typewriter-wrapper {
+            display: inline-block;
+            position: relative;
+            max-width: 450px; /* Reducido para mejor impacto visual */
+        }
+
+        .typewriter-text {
+            font-size: 1.15rem;
+            color: var(--oro-sutil);
+            line-height: 1.5;
+            margin: 0;
+            /* Máscara de revelado */
+            clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+            transition: clip-path 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .typewriter-wrapper.visible .typewriter-text {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .grid-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(197, 160, 89, 0.1);
+            padding: 40px 30px;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .category-card:hover, .category-card:active {
+            border-color: var(--oro-sutil);
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.2);
+            transform: translateY(-10px);
+            background: rgba(197, 160, 89, 0.05);
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(197, 160, 89, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .category-card:hover::before { transform: translateX(100%); }
+
+        .icon-box {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.3));
+        }
+
+        .category-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--blanco-puro);
+        }
+
+        .category-card p {
+            font-size: 0.9rem;
+            color: var(--texto-secundario);
+            line-height: 1.5;
+            max-width: 100%;
+        }
+
+        .tag-favorita {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--oro-sutil);
+            color: #000;
+            padding: 5px 40px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            transform: rotate(45deg);
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .inmersion-noir { padding: 80px 6%; }
+            .header-meta { text-align: left; }
+            .typewriter-text { font-size: 1rem; }
+            .category-card { padding: 30px 20px; }
+        }
+    </style>
+
+    <div class="container-v2">
+        <div class="header-meta">
+    <span style="color: var(--oro-sutil); font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; display: block; margin-bottom: 15px;">Solo para exigentes</span>
+    <h2>Acá el nivel no se negocia,<br> <span style="font-style: italic; color: var(--oro-sutil);">es cuestión de actitud.</span></h2>
+    
+    <div class="typewriter-wrapper" id="typewriterWrapper2">
+        <p class="typewriter-text">
+            Si vamos a destacar, que sea con una estela de poder que hable de éxito antes que nosotr@s mism@s.
+        </p>
+    </div>
+</div>
+
+        <div class="grid-categories">
+            <div class="category-card">
+                <span class="icon-box">✨</span>
+                <h3>Mujeres</h3>
+                <p>Elegancia líquida que cautiva. Notas florales para la mujer que no teme ser recordada.</p>
+            </div>
+
+            <div class="category-card">
+                <span class="icon-box">👔</span>
+                <h3>Hombres</h3>
+                <p>Poder embotellado. Amaderados intensos que definen el carácter de un líder moderno.</p>
+            </div>
+
+            <div class="category-card" style="border-color: rgba(197, 160, 89, 0.4);">
+                <div class="tag-favorita">Preferida</div>
+                <span class="icon-box">🕌</span>
+                <h3>Esencia Árabe</h3>
+                <p>Una joya olfativa de estela infinita y lujo ancestral que redefine la exclusividad total.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animación de brillo que sigue al mouse/toque
+        const glow = document.getElementById('mouseGlow');
+        const moveGlow = (e) => {
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const x = clientX - 300;
+            const y = clientY - 300;
+            glow.style.transform = `translate(${x}px, ${y}px)`;
+        };
+        document.addEventListener('mousemove', moveGlow);
+        document.addEventListener('touchmove', moveGlow);
+
+        // Disparador de la frase al hacer scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrapper = document.getElementById('typewriterWrapper2');
+            if(!wrapper) return;
+
+            const observerType = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        wrapper.classList.add('visible');
+                        observerType.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.6 });
+
+            observerType.observe(wrapper);
+        });
+    </script>
+</section>
+
+<section class="commerce-vault" id="tienda">
+    <style>
+        .commerce-vault {
+            padding: 100px 8%;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background-blob {
+            position: absolute;
+            top: 20%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(197, 160, 89, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 1;
+            animation: pulse-slow 8s infinite alternate;
+        }
+
+        @keyframes pulse-slow { 
+            from { transform: scale(1); opacity: 0.3; } 
+            to { transform: scale(1.3); opacity: 0.6; } 
+        }
+
+        .commerce-header {
+            text-align: right;
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .commerce-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--blanco-puro);
+            margin-bottom: 15px;
+        }
+
+        /* --- TEXTO ESTÁTICO (EFECTO ELIMINADO) --- */
+        .typewriter-commerce-wrapper {
+            display: inline-block;
+            text-align: right;
+            max-width: 500px;
+            margin-left: auto;
+        }
+
+        .typewriter-commerce {
+            font-size: 1.1rem;
+            color: var(--oro-sutil);
+            line-height: 1.6;
+            margin: 0;
+            /* Se eliminó clip-path y transition para que el texto sea siempre visible */
+        }
+
+        .product-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 120px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .media-display {
+            position: relative;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(197,160,89,0.1);
+            aspect-ratio: 1080 / 1350;
+        }
+
+        .media-display video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .promo-tag {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: var(--oro-sutil);
+            color: #000;
+            padding: 8px 15px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 5;
+        }
+
+        .item-detail h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .item-detail p {
+            color: var(--texto-secundario);
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 35px;
+            max-width: 450px;
+        }
+
+        .trust-micro {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .trust-pill {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(197,160,89,0.2);
+            padding: 10px 15px;
+            font-size: 0.65rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--oro-sutil);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-buy {
+            background: transparent;
+            border: 1px solid var(--oro-sutil);
+            padding: 20px 40px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-buy:hover {
+            box-shadow: 0 0 20px rgba(197,160,89,0.4);
+            background: var(--oro-sutil);
+            color: #000;
+        }
+
+        .checkout-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+            padding: 20px;
+        }
+
+        .checkout-card {
+            background: #111;
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            border: 1px solid var(--oro-sutil);
+            position: relative;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .close-form {
+            position: absolute;
+            top: 20px; right: 20px;
+            color: var(--oro-sutil);
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .checkout-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--oro-sutil);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--texto-secundario);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            border-bottom: 1px solid rgba(197,160,89,0.3);
+            padding: 12px 0;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-bottom-color: var(--oro-sutil);
+            background: rgba(197,160,89,0.05);
+        }
+
+        .btn-send {
+            width: 100%;
+            padding: 20px;
+            background: var(--oro-sutil);
+            border: none;
+            color: #000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .commerce-vault { padding: 80px 6%; }
+            .item-row { grid-template-columns: 1fr; gap: 30px; }
+            .commerce-header { text-align: left; }
+            .typewriter-commerce-wrapper { text-align: left; margin-left: 0; }
+            .item-detail h3 { font-size: 1.8rem; }
+            .checkout-card { padding: 30px 20px; }
+        }
+    </style>
+
+    <div class="background-blob"></div>
+
+    <div class="commerce-header">
+        <h2>Fragancias que definen su legado.</h2>
+        <div class="typewriter-commerce-wrapper">
+            <p class="typewriter-commerce">
+                Esencias premium seleccionadas para quienes exigen exclusividad y carácter en Medellín.
+            </p>
+        </div>
+    </div>
+
+    <div class="product-stack">
+        <div class="item-row">
+            <div class="media-display">
+                <div class="promo-tag">25% Descuento</div>
+                <video autoplay muted loop playsinline loading="lazy">
+                    <source src="Videos/Asad Elixir.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="item-detail">
+                <span style="color: var(--oro-sutil); letter-spacing: 3px; font-size: 0.7rem;">LATTAFA PREMIUM</span>
+                <h3>Asad Elixir</h3>
+                <p>Una mezcla volcánica de pimienta negra y tabaco diseñada para quien no acepta un "no" por respuesta.</p>
+                <div class="trust-micro">
+                    <div class="trust-pill"><span>🚚</span> Pago Contra Entrega</div>
+                    <div class="trust-pill"><span>⚡</span> En 24h a su puerta</div>
+                </div>
+                <button class="btn-buy" onclick="openCheckout('Asad Elixir', '$245.000')">¡PEDIR DE UNA!</button>
+            </div>
+        </div>
+
+        <div class="item-row">
+            <div class="media-display">
+                <div class="promo-tag">Estela Única en el Nicho</div>
+                <video autoplay muted loop playsinline loading="lazy">
+                    <source src="Videos/Amber Oud Dubai Night.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="item-detail">
+                <span style="color: var(--oro-sutil); letter-spacing: 3px; font-size: 0.7rem;">AL HARAMAIN LUXURY</span>
+                <h3>Amber Oud Dubai Night</h3>
+                <p>La exclusividad de las noches árabes en la Ciudad. Sándalo y miel que cautivan desde el primer segundo.</p>
+                <div class="trust-micro">
+                    <div class="trust-pill"><span>🔒</span> Compra Segura</div>
+                    <div class="trust-pill"><span>✨</span> Calidad total</div>
+                </div>
+                <button class="btn-buy" onclick="openCheckout('Amber Oud Dubai Night', '$320.000')">¡PEDIR DE UNA!</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout-overlay" id="checkoutPanel">
+        <div class="checkout-card">
+            <div class="close-form" onclick="closeCheckout()">✕</div>
+            <h4>Asegurar su Pedido</h4>
+            <div style="text-align: center; margin-bottom: 30px;">
+                <span id="selectedProduct" style="color: var(--oro-sutil); font-weight: 700;"></span>
+                <span id="selectedPrice" style="display: block; font-size: 0.8rem; margin-top: 5px; color: #fff;"></span>
+            </div>
+
+            <form id="orderForm">
+                <div class="form-group">
+                    <label>Su Nombre Completo</label>
+                    <input type="text" id="custName" placeholder="Samuel Casilla" required>
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp / Celular</label>
+                    <input type="tel" id="custTel" placeholder="321 894 6959" required>
+                </div>
+                <div class="form-group">
+                    <label>Dirección de Entrega (Medellín)</label>
+                    <input type="text" id="custAddress" placeholder="Ej: Calle 10 #43-20, El Poblado" required>
+                </div>
+                <div class="form-group">
+                    <label>Método de Pago</label>
+                    <select id="payMethod">
+                        <option value="Contra Entrega">Pago Contra Entrega (Efectivo)</option>
+                        <option value="Transferencia">Transferencia (Nequi/Bancolombia)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-send">PEDIR POR WHATSAPP ➔</button>
+            </form>
+            <p style="font-size: 0.6rem; color: #555; text-align: center; margin-top: 20px; text-transform: uppercase;">Su fragancia llega en menos de 24 horas.</p>
+        </div>
+    </div>
+
+    <script>
+        const panel = document.getElementById('checkoutPanel');
+        let currentProduct = "";
+
+        window.openCheckout = function(product, price) {
+            currentProduct = product;
+            document.getElementById('selectedProduct').innerText = product;
+            document.getElementById('selectedPrice').innerText = price;
+            panel.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.closeCheckout = function() {
+            panel.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('custName').value;
+            const tel = document.getElementById('custTel').value;
+            const address = document.getElementById('custAddress').value;
+            const method = document.getElementById('payMethod').value;
+
+            const message = `*NUEVO PEDIDO - NOIR ELIXIR*%0A%0A` +
+                            `*Producto:* ${currentProduct}%0A` +
+                            `*Cliente:* ${name}%0A` +
+                            `*WhatsApp:* ${tel}%0A` +
+                            `*Dirección:* ${address}%0A` +
+                            `*Método de Pago:* ${method}%0A%0A` +
+                            `_Enviado desde la web oficial_ ⚡`;
+
+            window.location.href = `https://wa.me/3218946959?text=${message}`;
+        });
+    </script>
+</section>
+
+<section class="infinite-gallery-pro" id="estela-nicho">
+    <div class="sea-of-fragrance" id="seaBg"></div>
+    <div class="neon-line top"></div>
+
+    <style>
+        .infinite-gallery-pro {
+            padding: 120px 0;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .sea-of-fragrance {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.08) 0%, #000 70%);
+            z-index: 1;
+        }
+
+        .aroma-particle {
+            position: absolute;
+            background: var(--oro-sutil);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.3;
+            filter: blur(2px);
+            z-index: 2;
+        }
+
+        .neon-line {
+            position: absolute;
+            left: 0; width: 100%; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--oro-sutil), transparent);
+            box-shadow: 0 0 15px var(--oro-sutil);
+            z-index: 3;
+            opacity: 0.5;
+        }
+        .neon-line.top { top: 0; }
+        .neon-line.bottom { bottom: 0; }
+
+        .gallery-header-pro {
+            position: relative;
+            z-index: 5;
+            padding: 0 8% 60px 8%;
+            text-align: right;
+        }
+
+        .gallery-header-pro h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            color: var(--blanco-puro);
+            line-height: 1.1;
+        }
+
+        .gallery-header-pro p {
+            color: var(--oro-sutil);
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        .marquee-pro {
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            display: flex;
+            overflow: hidden;
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 25px;
+            animation: bullet-train 35s linear infinite;
+            padding: 20px 0;
+        }
+
+        @keyframes bullet-train {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-280px * 6 - 25px * 6)); }
+        }
+
+        .fragrance-card-pro {
+            width: 280px;
+            height: 400px;
+            flex-shrink: 0;
+            background: #111;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fragrance-card-pro img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(20%);
+            transition: 0.8s;
+        }
+
+        .fragrance-card-pro:hover {
+            border-color: var(--oro-sutil);
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px rgba(197, 160, 89, 0.2);
+        }
+
+        .fragrance-card-pro:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.1);
+        }
+
+        .wa-float-pro {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background: #128c7e;
+            color: #fff;
+            padding: 18px 28px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 10000;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 15px rgba(18, 140, 126, 0.3);
+            transform: scale(0);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .wa-float-pro.show { transform: scale(1); }
+        .wa-float-pro svg { width: 24px; fill: white; }
+
+        @media (max-width: 768px) {
+            .infinite-gallery-pro { padding: 80px 0; }
+            .fragrance-card-pro { width: 200px; height: 300px; }
+            .gallery-header-pro { text-align: right; }
+            .wa-float-pro { bottom: 20px; right: 20px; padding: 14px 20px; font-size: 0.8rem; }
+        }
+    </style>
+
+    <div class="gallery-header-pro">
+        <h2>Usted merece <br>lo <span style="font-style: italic;">Inalcanzable.</span></h2>
+        <p>Curaduría Élite...</p>
+    </div>
+
+    <div class="marquee-pro">
+        <div class="marquee-track">
+            <div class="fragrance-card-pro"><img src="Imagenes/Invictu.webp" alt="Exclusivo" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/Bharara.webp" alt="Elegancia" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/Club-de-Nuit.webp" alt="Poder" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/Creed.webp" alt="Nicho" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/Xerjoff.webp" alt="Premium" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/You.webp" alt="Lujo" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/Invictu.webp" alt="Exclusivo" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/Bharara.webp" alt="Elegancia" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/Club-de-Nuit.webp" alt="Poder" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/Creed.webp" alt="Nicho" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/Xerjoff.webp" alt="Premium" loading="lazy"></div>
+            <div class="fragrance-card-pro"><img src="Imagenes/You.webp" alt="Lujo" loading="lazy"></div>
+        </div>
+    </div>
+
+    <div class="neon-line bottom"></div>
+
+    <a href="https://wa.me/3218946959?text=Hola%20Samuel%20deseo%20ver%20el%20catalogo%20completo%20e%20iconos%20perfectos" class="wa-float-pro" id="waFloatPro">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Catálogo Completo ➔
+    </a>
+
+    <script>
+        // Efecto Partículas de Aroma (Inmersión)
+        const container = document.getElementById('seaBg');
+        for (let i = 0; i < 40; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'aroma-particle';
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animation = `float ${Math.random() * 10 + 10}s infinite ease-in-out`;
+            container.appendChild(particle);
+        }
+
+        const styleParticles = document.createElement('style');
+        styleParticles.innerHTML = `@keyframes float { 
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; } 
+            50% { transform: translateY(-100px) translateX(50px); opacity: 0.5; } 
+        }`;
+        document.head.appendChild(styleParticles);
+
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth - e.pageX * 2) / 100;
+            const y = (window.innerHeight - e.pageY * 2) / 100;
+            container.style.transform = `translateX(${x}px) translateY(${y}px)`;
+        });
+
+        const waBtn = document.getElementById('waFloatPro');
+        const observerWA = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) waBtn.classList.add('show');
+                else waBtn.classList.remove('show');
+            });
+        }, { threshold: 0.2 });
+
+        observerWA.observe(document.getElementById('estela-nicho'));
+    </script>
+</section>
+
+<section class="trust-certification" id="reputacion">
+    <style>
+        .trust-certification {
+            position: relative;
+            padding: 120px 8%;
+            background: #000;
+            overflow: hidden;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .trust-bg-image {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(to right, rgba(0,0,0,0.9) 30%, rgba(0,0,0,0.4) 100%), 
+                              url('Imagenes/Fondo-Certificaciones.webp');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        .trust-container {
+            position: relative;
+            z-index: 5;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .trust-content {
+            text-align: left;
+        }
+
+        .trust-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            color: #fff;
+            margin-bottom: 25px;
+            line-height: 1.1;
+        }
+
+        .trust-content p {
+            font-size: 1.1rem;
+            color: var(--texto-secundario);
+            max-width: 500px;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .certs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .cert-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(197, 160, 89, 0.1);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        .cert-card svg {
+            width: 50px;
+            height: 50px;
+            fill: #555;
+            margin-bottom: 20px;
+            transition: all 0.5s ease;
+        }
+
+        .cert-card h4 {
+            color: var(--texto-secundario);
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .cert-card:hover, .cert-card.active {
+            border-color: var(--oro-sutil);
+            background: rgba(197, 160, 89, 0.05);
+            transform: translateY(-10px);
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.2);
+        }
+
+        .cert-card:hover svg, .cert-card.active svg {
+            fill: var(--oro-sutil);
+            filter: drop-shadow(0 0 10px var(--oro-sutil));
+        }
+
+        .cert-card:hover h4, .cert-card.active h4 {
+            color: #fff;
+        }
+
+        .guarantee-seal {
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border-left: 2px solid var(--oro-sutil);
+            background: rgba(197, 160, 89, 0.02);
+        }
+
+        .guarantee-seal span {
+            font-size: 0.8rem;
+            color: #fff;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 992px) {
+            .trust-container { grid-template-columns: 1fr; }
+            .trust-content { text-align: center; }
+            .trust-content p { margin: 0 auto 40px auto; }
+            .guarantee-seal { justify-content: center; border-left: none; border-top: 2px solid var(--oro-sutil); }
+        }
+    </style>
+
+    <div class="trust-bg-image"></div>
+
+    <div class="trust-container">
+        <div class="trust-content">
+            <span style="color: var(--oro-sutil); font-size: 0.7rem; letter-spacing: 5px;">ESTÁNDARES DE ÉXITO</span>
+            <h2>Su confianza <br> es nuestra <span style="font-style: italic; color: var(--oro-sutil);">Ley.</span></h2>
+            <p>
+                No solo entregamos una fragancia; entregamos un legado. Cada frasco cumple con los más altos estándares globales de calidad y originalidad.
+            </p>
+            
+            <div class="guarantee-seal">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="var(--oro-sutil)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                <span>GARANTÍA TOTAL: SATISFACCIÓN O DEVOLUCIÓN</span>
+            </div>
+        </div>
+
+        <div class="certs-grid">
+            <div class="cert-card" onclick="this.classList.toggle('active')">
+                <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 2zM12 15.5l-3.5 1.5 3.5-8.5 3.5 8.5-3.5-1.5z"/></svg>
+                <h4>Certificación <br> ISO 9001:2015</h4>
+            </div>
+            <div class="cert-card" onclick="this.classList.toggle('active')">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+                <h4>Ecosistema <br> Red Sapien</h4>
+            </div>
+            <div class="cert-card" onclick="this.classList.toggle('active')">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm3.3 14.79L11 13.51V7h2v5.66l3.22 1.89-.93 1.24z"/></svg>
+                <h4>Garantía de <br> Autenticidad</h4>
+            </div>
+            <div class="cert-card" onclick="this.classList.toggle('active')">
+                <svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm13.5-8.5l1.96 2.5H17V9.5h2.5zM18 18c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>
+                <h4>Logística <br> Élite Medellín</h4>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="elite-footer" id="contacto">
+    <style>
+        .elite-footer {
+            background-image: linear-gradient(rgba(245, 245, 245, 0.92), rgba(245, 245, 245, 0.96)), url('WhatsApp%20Image%202026-04-25%20at%208.15.02%20AM%20(copia).jpeg');
+            background-size: cover;
+            background-position: center;
+            color: #111;
+            padding: 80px 8% 20px 8%;
+            position: relative;
+            border-top: 3px solid var(--oro-sutil);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto 60px auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .faq-question {
+            width: 100%;
+            background: transparent;
+            border: none;
+            text-align: left;
+            padding: 20px 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #000;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--oro-sutil);
+        }
+
+        .faq-icon {
+            font-size: 1.5rem;
+            font-weight: 300;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            color: var(--oro-sutil);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .faq-answer p {
+            padding-bottom: 20px;
+            color: #444;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .policy-btn-container {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .btn-policy {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #111;
+            color: #fff;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid var(--oro-sutil);
+            transition: 0.4s;
+        }
+
+        .btn-policy:hover {
+            background: var(--oro-sutil);
+            color: #000;
+        }
+
+        .btn-policy svg {
+            width: 18px;
+            fill: currentColor;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .contact-item svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--oro-sutil);
+        }
+
+        .contact-item a, .contact-item span {
+            color: #222;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        .contact-item a:hover {
+            color: var(--oro-sutil);
+        }
+
+        .social-flex {
+            display: flex;
+            justify-content: flex-start;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .social-link svg {
+            width: 28px;
+            height: 28px;
+            fill: #111;
+            transition: 0.3s ease;
+        }
+
+        .social-link:hover svg {
+            fill: var(--oro-sutil);
+            transform: translateY(-5px);
+        }
+
+        .footer-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .footer-copy {
+            font-size: 0.75rem;
+            color: #555;
+            letter-spacing: 1px;
+        }
+
+        .footer-credits {
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        .footer-credits a {
+            color: var(--oro-sutil);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .live-time {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #333;
+            background: rgba(0,0,0,0.05);
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid { grid-template-columns: 1fr; }
+            .social-flex { justify-content: flex-start; }
+            .elite-footer { padding: 60px 6% 30px 6%; }
+        }
+    </style>
+
+    <div class="faq-container">
+        <div class="faq-item">
+            <button class="faq-question">¿Cuánto tarda la entrega en Medellín? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Entregas exclusivas en menos de 24 horas para toda el área metropolitana. Usted pide hoy, lo recibe hoy.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">¿Qué garantía me ofrecen? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Garantía total de autenticidad. Si la fragancia no cumple con sus expectativas, respaldamos su compra al 100%.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">¿Cuáles son sus estándares de calidad? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Trabajamos bajo estándares de altísima calidad internacional. Cada frasco es inspeccionado para asegurar una estela duradera.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">¿Cómo aseguran la privacidad de compra? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Implementamos ingeniería en la ejecución de venta desarrollada por <strong>Red Sapien</strong>. Su proceso es encriptado y privado.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">¿Qué categorías manejan? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Nos enfocamos en perfumería nicho, extractos árabes premium y fragancias de diseñador exclusivas.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">¿Tienen tienda física? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Operamos con un modelo de distribución VIP directa. Llevamos el lujo hasta su puerta sin intermediarios.</p></div>
+        </div>
+    </div>
+
+    <div class="policy-btn-container">
+        <a href="#" target="_blank" class="btn-policy">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Política de Privacidad
+        </a>
+    </div>
+
+    <div class="contact-grid">
+        <div class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+            <a href="tel:+573218946959">+57 321 894 6959</a>
+        </div>
+        <div class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            <a href="mailto:noir.casilla@proton.me">noir.casilla@proton.me</a>
+        </div>
+        <div class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <span>Distribución en todo Medellín</span>
+        </div>
+    </div>
+
+    <div class="social-flex">
+        <a href="#" class="social-link" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 01-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 017.8 2m-.2 2A3.6 3.6 0 004 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 003.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m4.4 3.7a4.3 4.3 0 110 8.6 4.3 4.3 0 010-8.6m0 1.7a2.6 2.6 0 100 5.2 2.6 2.6 0 000-5.2m5.2-3.1a1 1 0 110 2 1 1 0 010-2z"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="TikTok">
+            <svg viewBox="0 0 24 24"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 2.78-1.15 5.54-3.33 7.31-1.92 1.56-4.6 2.1-7.01 1.4-2.88-.84-5.22-3.07-5.91-5.94-.78-3.21.36-6.84 2.89-8.87 2.14-1.7 5.17-2.22 7.81-1.39v4.1c-2.31-.69-5.11-.25-6.66 1.7-1.47 1.84-1.12 4.79.84 6.19 1.78 1.28 4.54 1.05 5.92-.81.65-.87.97-1.95.96-3.04V.02z"/></svg>
+        </a>
+    </div>
+
+    <div class="footer-bottom">
+        <p class="footer-copy">© <span id="currentYear"></span> NOIR ELIXIR. Todos los derechos reservados.</p>
+        <p class="footer-credits">desarrollad@ por Samuel Casilla en conjunto con <a href="https://redsapien.com/" target="_blank">Red Sapien</a></p>
+        <div class="live-time" id="liveTime">Cargando hora...</div>
+    </div>
+
+    <script>
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const btn = item.querySelector('.faq-question');
+            btn.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                faqItems.forEach(i => {
+                    i.classList.remove('active');
+                    i.querySelector('.faq-answer').style.maxHeight = null;
+                });
+                if (!isActive) {
+                    item.classList.add('active');
+                    const answer = item.querySelector('.faq-answer');
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                }
+            });
+        });
+
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        function updateTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            const timeString = `Medellín: ${hours}:${minutes}:${seconds} ${ampm}`;
+            document.getElementById('liveTime').textContent = timeString;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</footer>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const preloader = document.getElementById('preloader');
+        const heroText = document.getElementById('heroText');
+        const navbar = document.getElementById('navbar');
+        const scrollInd = document.getElementById('scrollInd');
+
+        setTimeout(() => {
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                navbar.classList.add('visible');
+                heroText.classList.add('visible');
+                scrollInd.classList.add('visible');
+            }, 1000);
+        }, 2500); 
+    });
+
+    window.addEventListener('scroll', () => {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    const ctaBtn = document.getElementById('ctaBtn');
+    ctaBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const centerX = e.clientX;
+        const centerY = e.clientY;
+        for (let i = 0; i < 70; i++) {
+            const p = document.createElement('div');
+            p.classList.add('spray-particle');
+            const size = Math.random() * 10 + 2;
+            p.style.width = `${size}px`;
+            p.style.height = `${size}px`;
+            p.style.left = `${centerX}px`;
+            p.style.top = `${centerY}px`;
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * 400 + 50; 
+            p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+            p.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
+            const duration = Math.random() * 2 + 1;
+            p.style.animation = `aromaSplash ${duration}s cubic-bezier(0.1, 0.4, 0.1, 1) forwards`;
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), duration * 1000);
+        }
+        setTimeout(() => { window.location.href = this.href; }, 1800);
+    });
+
+    // EFECTO TYPEWRITER CON INTERSECTION OBSERVER (CORREGIDO Y SIN CURSOR)
+    function initializeTypewriter(element, text, delay = 50) {
+        if (!element) return;
+        const originalText = text || element.innerText;
+        element.innerText = '';
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < originalText.length) {
+                element.innerText += originalText.charAt(i);
+                i++;
+            } else {
+                clearInterval(interval);
+            }
+        }, delay);
+    }
+
+    const typewriterElement2 = document.getElementById('typewriterSeccion2');
+    const typewriterElement3 = document.getElementById('typewriterSeccion3');
+    
+    if (typewriterElement2) {
+        const observer2 = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('typed')) {
+                    entry.target.classList.add('typed');
+                    initializeTypewriter(entry.target, "Encuentre la esencia que proyecta su autoridad hoy.", 60);
+                    observer2.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        observer2.observe(typewriterElement2);
+    }
+    
+    if (typewriterElement3) {
+        const observer3 = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('typed')) {
+                    entry.target.classList.add('typed');
+                    initializeTypewriter(entry.target, "Hechas para nosotr@s, paisas exigentes que buscamos esencias premium a un precio único.", 50);
+                    observer3.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        observer3.observe(typewriterElement3);
+    }
+
+    const reputationSection = document.getElementById('reputacion');
+    const waBtnShared = document.getElementById('waFloatPro');
+    window.addEventListener('scroll', () => {
+        if (reputationSection && waBtnShared) {
+            const rect = reputationSection.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                waBtnShared.classList.add('show');
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
