@@ -12,6 +12,28 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@100;300;400;500;600&display=swap" rel="stylesheet">
 
+    <link rel="icon" type="image/png" href="Imagenes/favicon.ico">
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/redsapien/noir/3b985d034dd36f9f761af03a4f87a80a1741d313/Imagenes/Preview-Noir-Samuel.webp">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://noirmedallo.redsapien.com"> 
+
+<meta property="og:title" content="Noir Elixir | El Nivel de Medallo 🏛️✨">
+
+<meta property="og:description" content="Esencias para marcar la diferencia. El nivel de exigencia que Medallo exige en perfumería árabe y de nicho. Envío en 24h. 🏺🔥">
+
+<meta property="og:image" content="https://raw.githubusercontent.com/redsapien/noir/3b985d034dd36f9f761af03a4f87a80a1741d313/Imagenes/Preview-Noir-Samuel.webp">
+<meta property="og:image:secure_url" content="https://raw.githubusercontent.com/redsapien/noir/3b985d034dd36f9f761af03a4f87a80a1741d313/Imagenes/Preview-Noir-Samuel.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Noir Elixir - Exclusividad en Medellín">
+<meta property="og:image:type" content="image/webp">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Noir | Esencias de Otro Planeta 🌌">
+<meta name="twitter:description" content="No es solo oler bien, es marcar la diferencia. Afronte la exigencia de Medallo con porte único. Pago Contra Entrega. 🏛️⚡">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/redsapien/noir/3b985d034dd36f9f761af03a4f87a80a1741d313/Imagenes/Preview-Noir-Samuel.webp">
+
     <style>
         :root {
             --negro-absoluto: #000000;
@@ -1105,32 +1127,39 @@
         .certs-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
+            gap: 20px;
+            width: 100%;
         }
 
         .cert-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(197, 160, 89, 0.1);
-            padding: 30px;
+            padding: 25px 15px;
             text-align: center;
             transition: all 0.5s ease;
             cursor: pointer;
             backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .cert-card svg {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             fill: #555;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             transition: all 0.5s ease;
         }
 
         .cert-card h4 {
             color: var(--texto-secundario);
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             letter-spacing: 2px;
             text-transform: uppercase;
+            margin: 0;
+            line-height: 1.4;
         }
 
         .cert-card:hover, .cert-card.active {
@@ -1166,11 +1195,41 @@
             font-weight: 500;
         }
 
+        /* CORRECCIÓN RESPONSIVA DEFINITIVA */
         @media (max-width: 992px) {
-            .trust-container { grid-template-columns: 1fr; }
+            .trust-certification { padding: 80px 5%; }
+            .trust-container { 
+                grid-template-columns: 1fr; 
+                gap: 40px;
+            }
             .trust-content { text-align: center; }
             .trust-content p { margin: 0 auto 40px auto; }
-            .guarantee-seal { justify-content: center; border-left: none; border-top: 2px solid var(--oro-sutil); }
+            .guarantee-seal { 
+                justify-content: center; 
+                border-left: none; 
+                border-top: 2px solid var(--oro-sutil); 
+                margin-top: 30px;
+            }
+            .certs-grid {
+                max-width: 500px;
+                margin: 0 auto;
+                gap: 15px;
+            }
+            .cert-card {
+                padding: 20px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .trust-certification { padding: 60px 20px; }
+            .certs-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .cert-card h4 {
+                font-size: 0.6rem;
+                letter-spacing: 1px;
+            }
         }
     </style>
 
@@ -1178,7 +1237,7 @@
 
     <div class="trust-container">
         <div class="trust-content">
-            <span style="color: var(--oro-sutil); font-size: 0.7rem; letter-spacing: 5px;">ESTÁNDARES DE ÉXITO</span>
+            <span style="color: var(--oro-sutil); font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase;">Estándares de Éxito</span>
             <h2>Su confianza <br> es nuestra <span style="font-style: italic; color: var(--oro-sutil);">Ley.</span></h2>
             <p>
                 No solo entregamos una fragancia; entregamos un legado. Cada frasco cumple con los más altos estándares globales de calidad y originalidad.
@@ -1430,7 +1489,7 @@
     </div>
 
     <div class="policy-btn-container">
-        <a href="#" target="_blank" class="btn-policy">
+        <a href="Descargables/Privacidad-Noir-Samuel-Casilla.pdf" target="_blank" class="btn-policy">
             <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
             Política de Privacidad
         </a>
